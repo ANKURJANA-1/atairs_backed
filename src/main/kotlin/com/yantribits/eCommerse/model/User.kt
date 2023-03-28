@@ -1,22 +1,38 @@
 package com.yantribits.eCommerse.model
 
 import com.yantribits.eCommerse.model.enums.DataStatus
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
+import java.time.ZonedDateTime
 import java.util.ArrayList
 import java.util.UUID
 
+@Entity(name = "users")
 data class User(
+    @Id
     var id: String = UUID.randomUUID().toString(),
+    @Column(nullable = false)
     var userName: String = "",
+    @Column(nullable = false, unique = true)
     var userEmail: String = "",
+    @OneToMany(targetEntity = UserAddress::class)
     var userAddress: List<UserAddress> = ArrayList(),
+    @Column(nullable = false)
     var password: String = "",
+    @OneToOne(targetEntity = AccessRole::class)
     var accessRole: AccessRole = AccessRole(),
+    @OneToMany(targetEntity = PaymentAddress::class)
     var userPaymentAddress: List<PaymentAddress> = ArrayList(),
-    var dataStatus: DataStatus? = DataStatus.ACTIVE,
-    var createdDate: CreatedDate = CreatedDate(),
-    var modifiedDate: LastModifiedDate = LastModifiedDate()
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    var dataStatus: DataStatus = DataStatus.ACTIVE,
+    @CreationTimestamp
+    var createdDate: ZonedDateTime = ZonedDateTime.now(),
+    @UpdateTimestamp
+    var modifiedDate: ZonedDateTime = ZonedDateTime.now()
 )
 
 
